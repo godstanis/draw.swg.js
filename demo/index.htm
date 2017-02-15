@@ -58,13 +58,7 @@ $('#select-item').change(function(){
 */
     var isDrawing = false;
     drawSVG.init('svg-area');  
-    drawSVG.createPath('item_id');
     
-    //PathHelper.itemId = 'item_id';
-
-    drawSVG.createPath('arrow_id');
-    drawSVG.drawArrow('arrow_id',10, 10, 50, 50);
-
     $('#svg-area').mousemove(function(e){
 
         if(isDrawing)
