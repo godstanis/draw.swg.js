@@ -12,7 +12,8 @@ var drawSVG = {
     element: "", //<svg> id property
     strokeWidth: '4px',
     strokeColor: 'green',
-    init: function(){ //This method will render marker for arrow tip inside <svg>
+    init: function(element){ //This method will render marker for arrow tip inside <svg>
+        this.element = element;
         this.returnElement().innerHTML += HTMLhelper.renderMarker();
     },
     returnElement: function(){ //This method returns the element, provided by drawSVG.element (id) field
