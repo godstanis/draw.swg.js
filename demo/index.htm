@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script src="js/draw.svg.js"></script>
+  <script src="js/jscolor.min.js"></script>
+
+<style>
+body, html{
+    width:100%; padding:0; margin:0;
+}
+
+#image-box{
+    height:400px;
+    width:600px;
+    border:2px dotted black;
+    border-radius:1%;
+    margin:10px;
+    padding:5px;
+
+    resize: both;
+    overflow: auto;
+
+}
+#image-box svg{
+
+    width:99%; height:99%;
+
+}
+.form{
+    padding:5px;
+}
+.svg-element:hover{
+    cursor: pointer;
+
+}
+.brush-preview{
+    width:20px;
+    height:10px;
+}
+
+
+
+</style>
+</head>
+<body>
+<div id="image-box">
+    <svg id="svg-area">
+    </svg>
+
+    <div id="currentScreenshot">
+        
+    </div>
+</div>
+
+<div class="form">
+    <form id="select-item">
+        Color: <input class="jscolor" value="29AB22" name="strokeColor"> <br>
+        <input type="radio" value="square" name="item" checked>Square <img class="brush-preview" src="images/square.jpg"><br>
+        <input type="radio" value="arrow" name="item">Arrow <img class="brush-preview" src="images/arrow.jpg"><br>
+        <input type="radio" value="line" name="item">Line <img class="brush-preview" src="images/line.jpg"><br>
+        <input type="radio" value="ellipse" name="item">Ellipse <img class="brush-preview" src="images/ellipse.jpg"><br>
+        <input type="radio" value="eraser" name="item">Eraser <img class="brush-preview" src="images/eraser.jpg"><br>
+    </form>
+    
+    <p>Coordinates: <b id="current-pos"></b></p>
+</div>
+        
+    
+</body>
+
+<script>
+
+var selectedItem = $('input[name=item]:checked', '#select-item').val();
+var strokeColor = $('input[name=strokeColor]', '#select-item').val();
+
+$('#select-item').change(function(){
+    selectedItem = $('input[name=item]:checked', '#select-item').val();
+    strokeColor = $('input[name=strokeColor]', '#select-item').val();
+    console.log ($('input[name=item]:checked', '#select-item').val());
+});
+    
+</script>
+
+<script>
+
+    var isDrawing = false;
+    drawSVG.element = 'svg-area';
+    drawSVG.init();  
+    
+    $('#svg-area').mousemove(function(e){
+
+        if(isDrawing)
+        {
+            var curPos = drawSVG.getCurPos(e);
+                lX = curPos.x;
+                lY = curPos.y;
+
+            drawSVG.drawByString(selectedItem, itemId, fX, fY, lX, lY);
+        }
+
+        str = 'X:'+drawSVG.getCurPos(e).x+'  Y:'+drawSVG.getCurPos(e).y;
+        $('#current-pos').html(str);
+    })
+    .mousedown(function(e){
+        isDrawing = true;
+
+        var curPos = drawSVG.getCurPos(e);
+            fX = curPos.x;
+            fY = curPos.y;
+
+        itemId = (+ new Date()).toString();
+
+        drawSVG.strokeWidth = '4px';
+        drawSVG.strokeColor = '#'+strokeColor;
+        
+        if(selectedItem != 'eraser')
+            drawSVG.createByString(selectedItem, itemId);
+        else
+            drawSVG.deleteObject(e.target.id);
+
+        //console.log ('mousedown');
+    })
+    .mouseup(function(e) {
+        isDrawing = false;
+
+        var curPos = drawSVG.getCurPos(e);
+            lX = curPos.x;
+            lY = curPos.y;
+
+        //console.log ('mouseup');
+    });
+
+</script>
+</html>
