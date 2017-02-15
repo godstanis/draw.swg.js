@@ -1,0 +1,32 @@
+body, html{
+    width:100%; padding:0; margin:0;
+}
+
+#image-box{
+    height:400px;
+    width:600px;
+    border:2px dotted black;
+    border-radius:1%;
+    margin:10px;
+    padding:5px;
+
+    resize: both;
+    overflow: auto;
+
+}
+#image-box svg{
+
+    width:99%; height:99%;
+
+}
+.form{
+    padding:5px;
+}
+.svg-element:hover{
+    cursor: pointer;
+
+}
+.brush-preview{
+    width:20px;
+    height:10px;
+}
