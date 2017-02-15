@@ -5,7 +5,7 @@
     Short instruction: 
     - create <svg id="test"></svg> tag.
     - use drawSVG.element="test"; drawSVG.init() to initialize.
-    - now you are ready to go, more info on https://github.com/Stasgar/draw.swg
+    - now you are ready to go, more info on https://github.com/Stasgar/draw.swg.js
 */
 
 var drawSVG = {
@@ -32,10 +32,14 @@ var drawSVG = {
         Next 'create' methods used to insert pre-made structures in <svg> element
     */
     createPath: function(id){ //Creates <path> element inside initialized <svg> with provided id
+        PathHelper.itemId = id; // Change PathHelper itemId
+
         var element = this.returnElement();
         element.innerHTML += HTMLhelper.renderPath(id, this.strokeWidth, this.strokeColor);
     },
     createEllipse: function(id){ //Creates <ellipse> element inside initialized <svg> with provided id
+        PathHelper.itemId = id; // Change PathHelper itemId
+
         var element = this.returnElement();
         element.innerHTML += HTMLhelper.renderEllipse(id, this.strokeWidth, this.strokeColor);
     },
@@ -61,23 +65,26 @@ var drawSVG = {
         fX, fY - first (X;Y) coordinates to start from
         lX, lY - last (X;Y) coordinates to end the figure
     */
-    drawArrow: function(id,fX, fY, lX, lY){
-        var path = document.getElementById(id);
-
-        PathHelper.moveTo(path, fX, fY);
-        PathHelper.lineTo(path, lX, lY);
+    drawArrow: function(itemId,fX, fY, lX, lY){
         
+        // PathHelper.itemId is already linked in createPath
+
+        PathHelper.moveTo(fX, fY);
+        PathHelper.lineTo(lX, lY);
+        
+        var path = document.getElementById(itemId); // Add arrow tip to the end
         path.setAttribute('marker-end', 'url(#arrow_marker)');
     },
-    drawSquare: function(id, fX, fY, lX, lY){
-        var path = document.getElementById(id);
-
-        PathHelper.moveTo(path, fX, fY);
-        PathHelper.lineTo(path, fX, lY);
-        PathHelper.lineTo(path, lX, lY);
-        PathHelper.lineTo(path, lX, fY);
-        PathHelper.lineTo(path, fX, fY);
-        PathHelper.closePath(path);
+    drawSquare: function(itemId, fX, fY, lX, lY){
+        
+        // PathHelper.itemId is already linked in createPath
+        
+        PathHelper.moveTo(fX, fY);
+        PathHelper.lineTo(fX, lY);
+        PathHelper.lineTo(lX, lY);
+        PathHelper.lineTo(lX, fY);
+        PathHelper.lineTo(fX, fY);
+        PathHelper.closePath();
 
     },
     drawLine: drawLineFactory(), //read more about this mehod below
@@ -125,20 +132,23 @@ var drawSVG = {
     PathHelper implements methods of editing existing paths
 */
 var PathHelper = {
+    itemId:false,
     //Moves 'virtual brush' to the provided coordinates. If not used - 'virtual brush' will start from (0;0)
-    moveTo: function(path, X, Y){ 
+    moveTo: function(X, Y, itemId = this.itemId){ 
+        var path = document.getElementById(itemId)
         path.setAttribute('d', "M"+X.toString()+","+Y.toString());
     },
     //Draws the line from 'virtual brush' position to the provided coordinates
-    lineTo: function(path, X, Y){ 
+    lineTo: function(X, Y, itemId = this.itemId){ 
+        var path = document.getElementById(itemId)
         path.setAttribute('d', path.getAttribute('d') + "L"+X.toString()+","+Y.toString());
     },
     //Closes the path connectig the first point with the last
-    closePath: function(path){
+    closePath: function(itemId = this.itemId){
+        var path = document.getElementById(itemId)
         path.setAttribute('d', path.getAttribute('d') + "z");
     }
 };
-
 
 /*
     HTMLhelper represents simple and usefull HTML tags constructor.
@@ -150,7 +160,7 @@ var HTMLhelper = {
             </marker>'
     },
     renderPath: function(id, strokeWidth, strokeColor){
-        return '<path class="annote arrow svg-element" id="'+id+'"style="stroke-width: '+strokeWidth+';" fill="none" stroke="'+strokeColor+'"></path>';
+        return '<path class="svg-element" id="'+id+'"style="stroke-width: '+strokeWidth+';" fill="none" stroke="'+strokeColor+'"></path>';
     },
     renderEllipse: function(id, strokeWidth, strokeColor){
         return '<ellipse class="svg-element" id="'+id+'" stroke="'+strokeColor+'" stroke-width="'+strokeWidth+'" fill="none" />';
@@ -169,16 +179,16 @@ function drawLineFactory() {
     //Greater numbers will produce 'low poly' line effect.
     var TIME_BETWEEN_LINES_TICKS = 10;
 
-    function drawLine(id, X, Y) {
+    function drawLine(itemId, X, Y) {
         counter++;
         //If a line was recently ended, we won't do anything for 10 ticks
         if (counter>=TIME_BETWEEN_LINES_TICKS) {
             counter = 0;
-            var path = document.getElementById(id);
+            var path = document.getElementById(itemId);
             if (path.getAttribute('d')) {
-                PathHelper.lineTo(path, X, Y); //if path for
+                PathHelper.lineTo(X, Y, itemId); //if path for
             } else {
-                PathHelper.moveTo(path, X, Y);
+                PathHelper.moveTo(X, Y, itemId);
             }
         }
     }
