@@ -2,7 +2,7 @@
 Small pure JS SVG library
 
 ### About
-This library provides simple interface for building responsive applications.
+This library provides simple interface for manipulating SVG elements.
 
 ### Installation
 
