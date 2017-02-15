@@ -1,8 +1,4 @@
 # draw.swg.js
-Small SVG library
-
-
-# draw.swg.js
 Small pure JS SVG library
 
 ### About
