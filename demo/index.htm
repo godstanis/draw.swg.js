@@ -38,7 +38,9 @@
 </body>
 
 <script>
-
+/*
+    Ui interaction code
+*/
 var selectedItem = $('input[name=item]:checked', '#select-item').val();
 var strokeColor = $('input[name=strokeColor]', '#select-item').val();
 
@@ -51,7 +53,9 @@ $('#select-item').change(function(){
 </script>
 
 <script>
-
+/*
+    Mouse events combined with draw.svg.js functions
+*/
     var isDrawing = false;
     drawSVG.init('svg-area');  
     
@@ -64,8 +68,23 @@ $('#select-item').change(function(){
                 lY = curPos.y;
 
             drawSVG.drawByString(selectedItem, itemId, fX, fY, lX, lY);
+            /*
+                //The drawByString() is equivalent to this:
+
+            switch(selectedItem)
+            {
+                case "square": drawSVG.drawSquare(itemId,fX, fY, lX, lY)
+                    break;
+                case "arrow": drawSVG.drawArrow(itemId,fX, fY, lX, lY)
+                    break;
+                case "line": drawSVG.drawLine(itemId, lX, lY)
+                    break;
+                case "ellipse": drawSVG.drawEllipse(itemId, fX, fY, lX, lY)
+            }
+            */
         }
 
+        //Show coordinates in demo:
         str = 'X:'+drawSVG.getCurPos(e).x+'  Y:'+drawSVG.getCurPos(e).y;
         $('#current-pos').html(str);
     })
@@ -76,7 +95,7 @@ $('#select-item').change(function(){
             fX = curPos.x;
             fY = curPos.y;
 
-        itemId = (+ new Date()).toString();
+        itemId = (+ new Date()).toString(); // generate random unique id for figure
 
         drawSVG.strokeWidth = '4px';
         drawSVG.strokeColor = '#'+strokeColor;
@@ -85,17 +104,28 @@ $('#select-item').change(function(){
             drawSVG.createByString(selectedItem, itemId);
         else
             drawSVG.deleteObject(e.target.id);
+        
+        /*
+            //The createByString() is equivalent to this:
+            
+            switch(selectedItem)
+            {
+                case "square": drawSVG.createPath(itemId);
+                    break;
+                case "arrow": drawSVG.createPath(itemId);
+                    break;
+                case "line": drawSVG.createPath(itemId);
+                    break;
+                case "ellipse": drawSVG.createEllipse(itemId);
+                    break;
+                case "eraser": drawSVG.deleteObject(e.target.id);
+            }
+        */
 
-        //console.log ('mousedown');
     })
     .mouseup(function(e) {
         isDrawing = false;
 
-        var curPos = drawSVG.getCurPos(e);
-            lX = curPos.x;
-            lY = curPos.y;
-
-        //console.log ('mouseup');
     });
 
 </script>
