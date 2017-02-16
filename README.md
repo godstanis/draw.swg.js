@@ -60,4 +60,4 @@ drawSVG.createPath('arrow_id');
 drawSVG.drawArrow('arrow_id',10, 10, 50, 50);
 ```
 <img src="http://i.imgur.com/yAgZPyp.jpg">
-The code above will create arrow, pointing from (0;0) to (50;50).
+The code above will create arrow, pointing from (10;10) to (50;50).
