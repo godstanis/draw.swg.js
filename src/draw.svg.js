@@ -14,13 +14,14 @@ var drawSVG = {
     strokeColor: 'green',
     init: function(element){ //This method will render marker for arrow tip inside <svg>
         this.element = element;
-        this.returnElement().innerHTML += HTMLhelper.renderMarker();
     },
+
     returnElement: function(){ //This method returns the element, provided by drawSVG.element (id) field
         return document.getElementById(this.element);
     },
+
     deleteObject: function(id){ //deletes an object from DOM
-        var deletable = ['path', 'ellipse'];//deletable tags
+        deletable = ['path', 'ellipse'];//deletable object tags
         var element = document.getElementById(id);
 
         if(deletable.indexOf(element.tagName) != -1 && confirm('Are you sure?'))
@@ -28,21 +29,24 @@ var drawSVG = {
             element.parentNode.removeChild(element);
         }
     },
+
     /*
-        Next 'create' methods used to insert pre-made structures in <svg> element
+        Next 'create' method used to insert pre-made structures in <svg> element
     */
-    createPath: function(id){ //Creates <path> element inside initialized <svg> with provided id
+    createElement: function(id){
         PathHelper.itemId = id; // Change PathHelper itemId
-
         var element = this.returnElement();
-        element.innerHTML += HTMLhelper.renderPath(id, this.strokeWidth, this.strokeColor);
-    },
-    createEllipse: function(id){ //Creates <ellipse> element inside initialized <svg> with provided id
-        PathHelper.itemId = id; // Change PathHelper itemId
 
-        var element = this.returnElement();
-        element.innerHTML += HTMLhelper.renderEllipse(id, this.strokeWidth, this.strokeColor);
+        return {
+            path: function(){
+                element.innerHTML += HTMLhelper.renderPath(id, this.strokeWidth, this.strokeColor);
+            },
+            ellipse: function(){
+                element.innerHTML += HTMLhelper.renderEllipse(id, this.strokeWidth, this.strokeColor);
+            }
+        }
     },
+
     getOffset: function(element){ //Service method, providing current information about <svg> relative position
         var box = element.getBoundingClientRect();
         return {
@@ -50,6 +54,7 @@ var drawSVG = {
             left: box.left + pageXOffset
         };
     },
+
     getCurPos: function(e){ //Returns current mouse position in relative <svg> coordinates
         var svg = this.returnElement();
         x = e.pageX - drawSVG.getOffset(svg).left;
@@ -59,42 +64,80 @@ var drawSVG = {
             y: y
         }
     },
+
     /*
         Next 'draw' methods use existing element, created by 'create' method and change it properties.
         id - id of existing element, that is going to be changed
         fX, fY - first (X;Y) coordinates to start from
         lX, lY - last (X;Y) coordinates to end the figure
     */
-    drawArrow: function(itemId,fX, fY, lX, lY){
-        
-        // PathHelper.itemId is already linked in createPath
+    drawObject: function(itemId = this.itemId){
 
-        PathHelper.moveTo(fX, fY);
-        PathHelper.lineTo(lX, lY);
-        
-        var path = document.getElementById(itemId); // Add arrow tip to the end
-        path.setAttribute('marker-end', 'url(#arrow_marker)');
-    },
-    drawSquare: function(itemId, fX, fY, lX, lY){
-        
-        // PathHelper.itemId is already linked in createPath
-        
-        PathHelper.moveTo(fX, fY);
-        PathHelper.lineTo(fX, lY);
-        PathHelper.lineTo(lX, lY);
-        PathHelper.lineTo(lX, fY);
-        PathHelper.lineTo(fX, fY);
-        PathHelper.closePath();
+        return {
+            square: function(fX, fY, lX, lY){
+                PathHelper.moveTo(fX, fY);
+                PathHelper.lineTo(fX, lY);
+                PathHelper.lineTo(lX, lY);
+                PathHelper.lineTo(lX, fY);
+                PathHelper.lineTo(fX, fY);
+                PathHelper.closePath();
+            },
+            ellipse: function (fX, fY, lX, lY){
+                var ellipse = document.getElementById(itemId);
+                ellipse.setAttribute('cx', fX - (fX-lX)/2);
+                ellipse.setAttribute('cy', fY - (fY-lY)/2);
+                ellipse.setAttribute('rx', Math.abs(fX-lX)/2);
+                ellipse.setAttribute('ry', Math.abs(fY-lY)/2);
+            },
+            arrow: function(fX, fY, lX, lY){
+                // Draws the line
+                PathHelper.moveTo(fX, fY);
+                PathHelper.lineTo(lX, lY);
 
+                // Arrow tip vector points
+                var arrowTipPoints = {
+                    "x":{"1":0,"2":30,"3":0},
+                    "y":{"1":-10,"2":0,"3":10}
+                };
+
+                // Draws the given points array in given angle
+                function drawRotated(arr, angle) 
+                {
+                    for(var i=1; i<=3; i++){
+                        x2 = arrowTipPoints["x"][i];
+                        y2 = arrowTipPoints["y"][i];
+
+                        newX = x2*Math.cos(angle) - y2*Math.sin(angle);
+                        newY = x2*Math.sin(angle) + y2*Math.cos(angle);
+
+                        PathHelper.lineTo(lX+newX, lY+newY);
+                    }
+
+                    PathHelper.lineTo(lX, lY); // Closes the triangle
+                }
+
+                //Returns the current line angle in rads
+                function getCurrentLineAngle()
+                {
+                    var angle_rad = Math.atan( (lY - fY) / (lX - fX) );
+
+                    if(lX<fX)
+                    {
+                        degree = -90;
+                        angle_rad-=degree-1.1;
+                    }
+
+                    return angle_rad;
+                }
+
+                // Finnaly draws the arrow tip
+                drawRotated(arrowTipPoints, getCurrentLineAngle());
+            }
+        }
     },
-    drawLine: drawLineFactory(), //read more about this mehod below
-    drawEllipse: function (id, fX, fY, lX, lY){
-        var path = document.getElementById(id);
-        path.setAttribute('cx', fX - (fX-lX)/2);
-        path.setAttribute('cy', fY - (fY-lY)/2);
-        path.setAttribute('rx', Math.abs(fX-lX)/2);
-        path.setAttribute('ry', Math.abs(fY-lY)/2);
-    },
+
+    drawLine: drawLineFactory(), //Closure. Read more about this mehod below
+
     /*
         Next xxxByString methods provide simple interface for 
         string based switching (for example Radio buttons input)
@@ -103,25 +146,27 @@ var drawSVG = {
 
         switch(string)
             {
-                case "square": this.drawSquare(itemId,fX, fY, lX, lY)
+                case "square": this.drawObject(itemId).square(fX, fY, lX, lY)
                     break;
-                case "arrow": this.drawArrow(itemId,fX, fY, lX, lY)
+                case "arrow": this.drawObject(itemId).arrow(fX, fY, lX, lY)
                     break;
                 case "line": this.drawLine(itemId, lX, lY)
                     break;
-                case "ellipse": this.drawEllipse(itemId, fX, fY, lX, lY)
+                case "ellipse": this.drawObject(itemId).ellipse(fX, fY, lX, lY)
             }
     },
+
     createByString(string, itemId){
+
         switch(string)
             {
-                case "square": this.createPath(itemId);
+                case "square": this.createElement(itemId).path();
                     break;
-                case "arrow": this.createPath(itemId);
+                case "arrow": this.createElement(itemId).path();
                     break;
-                case "line": this.createPath(itemId);
+                case "line": this.createElement(itemId).path();
                     break;
-                case "ellipse": this.createEllipse(itemId);
+                case "ellipse": this.createElement(itemId).ellipse();
                     break;
                 case "eraser": this.deleteObject(element.target.id);
             }
@@ -133,16 +178,19 @@ var drawSVG = {
 */
 var PathHelper = {
     itemId:false,
+
     //Moves 'virtual brush' to the provided coordinates. If not used - 'virtual brush' will start from (0;0)
     moveTo: function(X, Y, itemId = this.itemId){ 
         var path = document.getElementById(itemId)
         path.setAttribute('d', "M"+X.toString()+","+Y.toString());
     },
+
     //Draws the line from 'virtual brush' position to the provided coordinates
     lineTo: function(X, Y, itemId = this.itemId){ 
         var path = document.getElementById(itemId)
         path.setAttribute('d', path.getAttribute('d') + "L"+X.toString()+","+Y.toString());
     },
+
     //Closes the path connectig the first point with the last
     closePath: function(itemId = this.itemId){
         var path = document.getElementById(itemId)
@@ -154,16 +202,13 @@ var PathHelper = {
     HTMLhelper represents simple and usefull HTML tags constructor.
 */
 var HTMLhelper = {
-    renderMarker: function(){ //marker for arrow tip
-        return '<marker id="arrow_marker" markerHeight="8" markerWidth="8" markerUnits="strokeWidth" orient="auto" refX="0" refY="5" viewBox="0 0 10 10">\
-                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="grey" id="arrow_marker_path"></path>\
-            </marker>'
+
+    renderPath: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
+        return '<path class="svg-element" id="'+id+'"style="stroke-width: '+strokeWidth+';" fill="'+fill+'" stroke="'+strokeColor+'"></path>';
     },
-    renderPath: function(id, strokeWidth, strokeColor){
-        return '<path class="svg-element" id="'+id+'"style="stroke-width: '+strokeWidth+';" fill="none" stroke="'+strokeColor+'"></path>';
-    },
-    renderEllipse: function(id, strokeWidth, strokeColor){
-        return '<ellipse class="svg-element" id="'+id+'" stroke="'+strokeColor+'" stroke-width="'+strokeWidth+'" fill="none" />';
+
+    renderEllipse: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
+        return '<ellipse class="svg-element" id="'+id+'" stroke="'+strokeColor+'" stroke-width="'+strokeWidth+'" fill="'+fill+'" />';
     }
 };
 
@@ -172,7 +217,6 @@ var HTMLhelper = {
     You can read more about closures on https://www.w3schools.com/js/js_function_closures.asp
 */
 function drawLineFactory() {
-
     var counter = 0;
 
     //Decrease to draw lines more often; increase to draw lines less often.
@@ -181,6 +225,7 @@ function drawLineFactory() {
 
     function drawLine(itemId, X, Y) {
         counter++;
+
         //If a line was recently ended, we won't do anything for 10 ticks
         if (counter>=TIME_BETWEEN_LINES_TICKS) {
             counter = 0;

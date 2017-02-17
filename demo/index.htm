@@ -31,7 +31,6 @@
         <input type="radio" value="eraser" name="item">Eraser <img class="brush-preview" src="images/eraser.jpg"><br>
     </form>
     
-    <p>Coordinates: <b id="current-pos"></b></p>
 </div>
         
     
@@ -58,6 +57,8 @@ $('#select-item').change(function(){
 */
     var isDrawing = false;
     drawSVG.init('svg-area');  
+
+    drawSVG.createElement('your-id').path();
     
     $('#svg-area').mousemove(function(e){
 
