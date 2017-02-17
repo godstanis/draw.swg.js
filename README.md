@@ -30,13 +30,13 @@ drawSVG.init('svg-id');
 
 To create a `<path>` element use:
 ```js
-drawSVG.createPath('your_id');
+drawSVG.createElement('element-id').path();
 ```
 >Every 'create' method  resets `PathHelper.itemId` property, you can change it if you want to manipulate another object.
 
 After execution of this command your `<svg>` element will get the new empty `<path>` element in it:
 ```html
-<path class="svg-element" id="item_id" style="stroke-width: 4px;" fill="none" stroke="green"></path>
+<path class="svg-element" id="element-id" style="stroke-width: 4px;" fill="none" stroke="green"></path>
 ```
 Now you have object that can be manipulated by JS.
 ##### Low Level methods
@@ -56,8 +56,12 @@ You can also use pre-made logic for:
 </ul>
 Example for Arrow:
 ```js
-drawSVG.createPath('arrow_id');
-drawSVG.drawArrow('arrow_id',10, 10, 50, 50);
+drawSVG.createElement('arrow-id').path();
+drawSVG.drawObject('arrow-id').arrow(); 
+/* 
+ You could use 'drawSVG.drawObject().arrow(10,10,50,50)'
+ because create method has assigned 'PathHelper.itemId'
+*/
 ```
-<img src="http://i.imgur.com/yAgZPyp.jpg">
-The code above will create arrow, pointing from (0;0) to (50;50).
+<img src="http://i.imgur.com/3Zuyp5K.png">
+The code above will create arrow, pointing from (10;10) to (50;50).
