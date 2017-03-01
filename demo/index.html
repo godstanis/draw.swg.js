@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="../src/draw.svg.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+
+<div id="image-box">
+    <svg id="svg-area"></svg>
+</div>
+
+</body>
+
+<script>
+drawSVG.init('svg-area');
+
+drawSVG.createElement('line_1').path();
+PathHelper.moveTo(10,10).lineTo(50,50).lineTo(10,100);
+
+drawSVG.createElement('line_2').path();
+PathHelper.moveTo(100,10);
+PathHelper.lineTo(150,10);
+PathHelper.lineTo(150, 50);
+PathHelper.lineTo(100, 50);
+PathHelper.lineTo(100, 100);
+PathHelper.lineTo(150, 100);
+
+drawSVG.createElement('ellipse').ellipse();
+drawSVG.drawObject().ellipse(300, 10, 200, 100);
+
+drawSVG.createElement('arrow_1').path();
+drawSVG.drawObject().arrow(20, 110, 60, 160);
+
+drawSVG.createElement('rectangle_1').path();
+drawSVG.drawObject().rectangle(120, 110, 260, 210);
+</script>
+</html>
