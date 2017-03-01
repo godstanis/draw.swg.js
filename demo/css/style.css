@@ -11,22 +11,10 @@ body, html{
     padding:5px;
 
     resize: both;
-    overflow: auto;
+    overflow: hidden;
 
 }
+
 #image-box svg{
-
-    width:99%; height:99%;
-
-}
-.form{
-    padding:5px;
-}
-.svg-element:hover{
-    cursor: pointer;
-
-}
-.brush-preview{
-    width:20px;
-    height:10px;
+    width:100%; height:100%;
 }

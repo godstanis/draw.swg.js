@@ -15,7 +15,9 @@ var drawSVG = {
     init: function(element){ //This method will render marker for arrow tip inside <svg>
         this.element = element;
     },
-
+    clear: function(){
+        this.returnElement().innerHTML = '';
+    },
     returnElement: function(){ //This method returns the element, provided by drawSVG.element (id) field
         return document.getElementById(this.element);
     },
@@ -36,32 +38,16 @@ var drawSVG = {
     createElement: function(id){
         PathHelper.itemId = id; // Change PathHelper itemId
         var element = this.returnElement();
+        var strokeColor = this.strokeColor;
+        var strokeWidth = this.strokeWidth;
 
         return {
             path: function(){
-                element.innerHTML += HTMLhelper.renderPath(id, this.strokeWidth, this.strokeColor);
+                element.innerHTML += HTMLhelper.renderPath(id, strokeWidth, strokeColor);
             },
             ellipse: function(){
-                element.innerHTML += HTMLhelper.renderEllipse(id, this.strokeWidth, this.strokeColor);
+                element.innerHTML += HTMLhelper.renderEllipse(id, strokeWidth, strokeColor);
             }
-        }
-    },
-
-    getOffset: function(element){ //Service method, providing current information about <svg> relative position
-        var box = element.getBoundingClientRect();
-        return {
-            top: box.top + pageYOffset,
-            left: box.left + pageXOffset
-        };
-    },
-
-    getCurPos: function(e){ //Returns current mouse position in relative <svg> coordinates
-        var svg = this.returnElement();
-        x = e.pageX - drawSVG.getOffset(svg).left;
-        y = e.pageY - drawSVG.getOffset(svg).top;
-        return {
-            x: x,
-            y: y
         }
     },
 
@@ -71,10 +57,10 @@ var drawSVG = {
         fX, fY - first (X;Y) coordinates to start from
         lX, lY - last (X;Y) coordinates to end the figure
     */
-    drawObject: function(itemId = this.itemId){
+    drawObject: function(itemId = PathHelper.itemId){
 
         return {
-            square: function(fX, fY, lX, lY){
+            rectangle: function(fX, fY, lX, lY){
                 PathHelper.moveTo(fX, fY);
                 PathHelper.lineTo(fX, lY);
                 PathHelper.lineTo(lX, lY);
@@ -93,7 +79,7 @@ var drawSVG = {
                 // Draws the line
                 PathHelper.moveTo(fX, fY);
                 PathHelper.lineTo(lX, lY);
-
+                
                 // Arrow tip vector points
                 var arrowTipPoints = {
                     "x":{"1":0,"2":30,"3":0},
@@ -103,6 +89,7 @@ var drawSVG = {
                 // Draws the given points array in given angle
                 function drawRotated(arr, angle) 
                 {
+                    
                     for(var i=1; i<=3; i++){
                         x2 = arrowTipPoints["x"][i];
                         y2 = arrowTipPoints["y"][i];
@@ -110,7 +97,7 @@ var drawSVG = {
                         newX = x2*Math.cos(angle) - y2*Math.sin(angle);
                         newY = x2*Math.sin(angle) + y2*Math.cos(angle);
 
-                        PathHelper.lineTo(lX+newX, lY+newY);
+                        PathHelper.lineTo(lX+parseFloat(newX), lY+parseFloat(newY) );
                     }
 
                     PathHelper.lineTo(lX, lY); // Closes the triangle
@@ -121,7 +108,7 @@ var drawSVG = {
                 {
                     var angle_rad = Math.atan( (lY - fY) / (lX - fX) );
 
-                    if(lX<fX)
+                    if(lX < fX)
                     {
                         degree = -90;
                         angle_rad-=degree-1.1;
@@ -131,7 +118,11 @@ var drawSVG = {
                 }
 
                 // Finnaly draws the arrow tip
-                drawRotated(arrowTipPoints, getCurrentLineAngle());
+                var distance = Math.sqrt(Math.pow(lX-fX,2)+Math.pow(lY-fY,2));
+
+                if(distance > 0)
+                    drawRotated(arrowTipPoints, getCurrentLineAngle());
+
             }
         }
     },
@@ -143,10 +134,10 @@ var drawSVG = {
         string based switching (for example Radio buttons input)
     */
     drawByString(string, itemId, fX, fY, lX, lY){ 
-
+        console.log(itemId);
         switch(string)
             {
-                case "square": this.drawObject(itemId).square(fX, fY, lX, lY)
+                case "rectangle": this.drawObject(itemId).rectangle(fX, fY, lX, lY)
                     break;
                 case "arrow": this.drawObject(itemId).arrow(fX, fY, lX, lY)
                     break;
@@ -160,7 +151,7 @@ var drawSVG = {
 
         switch(string)
             {
-                case "square": this.createElement(itemId).path();
+                case "rectangle": this.createElement(itemId).path();
                     break;
                 case "arrow": this.createElement(itemId).path();
                     break;
@@ -183,12 +174,14 @@ var PathHelper = {
     moveTo: function(X, Y, itemId = this.itemId){ 
         var path = document.getElementById(itemId)
         path.setAttribute('d', "M"+X.toString()+","+Y.toString());
+        return this;
     },
 
     //Draws the line from 'virtual brush' position to the provided coordinates
     lineTo: function(X, Y, itemId = this.itemId){ 
         var path = document.getElementById(itemId)
         path.setAttribute('d', path.getAttribute('d') + "L"+X.toString()+","+Y.toString());
+        return this;
     },
 
     //Closes the path connectig the first point with the last
@@ -204,7 +197,7 @@ var PathHelper = {
 var HTMLhelper = {
 
     renderPath: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
-        return '<path class="svg-element" id="'+id+'"style="stroke-width: '+strokeWidth+';" fill="'+fill+'" stroke="'+strokeColor+'"></path>';
+        return '<path class="svg-element" id="'+id+'" stroke-width="'+strokeWidth+'" fill="'+fill+'" stroke="'+strokeColor+'"></path>';
     },
 
     renderEllipse: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
