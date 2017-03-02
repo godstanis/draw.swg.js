@@ -23,7 +23,7 @@ var drawSVG = {
     },
 
     deleteObject: function(id){ //deletes an object from DOM
-        deletable = ['path', 'ellipse'];//deletable object tags
+        var deletable = ['path', 'ellipse'];//deletable object tags
         var element = document.getElementById(id);
 
         if(deletable.indexOf(element.tagName) != -1 && confirm('Are you sure?'))
@@ -91,11 +91,11 @@ var drawSVG = {
                 {
                     
                     for(var i=1; i<=3; i++){
-                        x2 = arrowTipPoints["x"][i];
-                        y2 = arrowTipPoints["y"][i];
+                        var x2 = arrowTipPoints["x"][i];
+                        var y2 = arrowTipPoints["y"][i];
 
-                        newX = x2*Math.cos(angle) - y2*Math.sin(angle);
-                        newY = x2*Math.sin(angle) + y2*Math.cos(angle);
+                        var newX = x2*Math.cos(angle) - y2*Math.sin(angle);
+                        var newY = x2*Math.sin(angle) + y2*Math.cos(angle);
 
                         PathHelper.lineTo(lX+parseFloat(newX), lY+parseFloat(newY) );
                     }
@@ -110,8 +110,8 @@ var drawSVG = {
 
                     if(lX < fX)
                     {
-                        degree = -90;
-                        angle_rad-=degree-1.1;
+                        var degree = -90;
+                        var angle_rad-=degree-1.1;
                     }
 
                     return angle_rad;
@@ -168,7 +168,7 @@ var drawSVG = {
     PathHelper implements methods of editing existing paths
 */
 var PathHelper = {
-    itemId:false,
+    var itemId:false,
 
     //Moves 'virtual brush' to the provided coordinates. If not used - 'virtual brush' will start from (0;0)
     moveTo: function(X, Y, itemId = this.itemId){ 
