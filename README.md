@@ -17,7 +17,7 @@ This library provides simple interface for manipulating SVG elements.
 <svg id="svg-id"></svg>
 ```
 
-Use JavaScript to initialize it:
+Use drawSVG to initialize it:
 ```js
 drawSVG.init('svg-id');
 ```
@@ -39,25 +39,34 @@ After execution of this command your `<svg>` element will get the new empty `<pa
 <path class="svg-element" id="element-id" style="stroke-width: 4px;" fill="none" stroke="green"></path>
 ```
 Now you have object that can be manipulated by JS.
+
 ##### Low Level methods
 You can now use simple pre-made method to draw lines using `PathHelper`:
 ```js
 PathHelper.moveTo(10,10);
 PathHelper.lineTo(20,10);
 ```
+You can also use cunstructions like this one:
+```js
+PathHelper.moveTo(10,10).lineTo(20,10);
+```
+There is also a method to close your path:
+```js
+PathHelper.closePath();
+```
 The code above will create horizontal line (10px in length).(<img width=40px src="http://i.imgur.com/fQUxYFA.jpg">)
 ##### Pre-sets of basic figures
 You can also use pre-made logic for:
 <ul>
 <li>Arrow</li>
-<li>Square(path)</li>
+<li>Rectangle(path)</li>
 <li>Ellipse</li>
 <li>Generatable line (used to generate long paths)</li>
 </ul>
 Example for Arrow:
 ```js
 drawSVG.createElement('arrow-id').path();
-drawSVG.drawObject('arrow-id').arrow(); 
+drawSVG.drawObject('arrow-id').arrow(10,10,50,50); 
 /* 
  You could use 'drawSVG.drawObject().arrow(10,10,50,50)'
  because create method has assigned 'PathHelper.itemId'
