@@ -111,7 +111,7 @@ var drawSVG = {
                     if(lX < fX)
                     {
                         var degree = -90;
-                        var angle_rad-=degree-1.1;
+                        angle_rad-=degree-1.1;
                     }
 
                     return angle_rad;
@@ -168,7 +168,7 @@ var drawSVG = {
     PathHelper implements methods of editing existing paths
 */
 var PathHelper = {
-    var itemId:false,
+    itemId:false,
 
     //Moves 'virtual brush' to the provided coordinates. If not used - 'virtual brush' will start from (0;0)
     moveTo: function(X, Y, itemId = this.itemId){ 
