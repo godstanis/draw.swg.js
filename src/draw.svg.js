@@ -40,6 +40,7 @@ var drawSVG = {
         var element = this.returnElement();
         var strokeColor = this.strokeColor;
         var strokeWidth = this.strokeWidth;
+        var HTMLhelper = this.HTMLhelper;
 
         return {
             path: function(){
@@ -71,7 +72,6 @@ var drawSVG = {
     */
     drawObject: function(itemId = PathHelper.itemId, do_create = true){
         var current = this;
-        console.log ('itemid='+itemId+' do_create= '+do_create);
         function createManage(id, type)
         {
             if(do_create)
@@ -161,6 +161,20 @@ var drawSVG = {
 
     drawLine: drawLineFactory(), //Closure. Read more about this mehod below
 
+    /*
+        HTMLhelper is used to provide easy html implementation of base objects.
+    */
+    HTMLhelper: {
+
+        renderPath: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
+            return '<path class="svg-element" id="'+id+'" stroke-width="'+strokeWidth+'" fill="'+fill+'" stroke="'+strokeColor+'"></path>';
+        },
+
+        renderEllipse: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
+            return '<ellipse class="svg-element" id="'+id+'" stroke="'+strokeColor+'" stroke-width="'+strokeWidth+'" fill="'+fill+'" />';
+        }
+    },
+
 };
 
 /*
@@ -187,21 +201,14 @@ var PathHelper = {
     closePath: function(itemId = this.itemId){
         var path = document.getElementById(itemId)
         path.setAttribute('d', path.getAttribute('d') + "z");
-    }
-};
-
-/*
-    HTMLhelper represents simple and usefull HTML tags constructor.
-*/
-var HTMLhelper = {
-
-    renderPath: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
-        return '<path class="svg-element" id="'+id+'" stroke-width="'+strokeWidth+'" fill="'+fill+'" stroke="'+strokeColor+'"></path>';
     },
 
-    renderEllipse: function(id, strokeWidth = "4px", strokeColor = "green", fill = "none"){
-        return '<ellipse class="svg-element" id="'+id+'" stroke="'+strokeColor+'" stroke-width="'+strokeWidth+'" fill="'+fill+'" />';
-    }
+    //itemId setter
+    setIemId: function(itemId)
+    {
+        this.itemId = itemId;
+    },
+
 };
 
 /* 
