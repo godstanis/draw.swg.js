@@ -81,7 +81,6 @@ var drawSVG = {
             else
             {
                 itemId = PathHelper.itemId;
-                console.log (itemId);
             }
         }
 
@@ -159,7 +158,39 @@ var drawSVG = {
         }
     },
 
-    drawLine: drawLineFactory(), //Closure. Read more about this mehod below
+    liner: null, //buffer for closure
+    drawLine: function(itemId, X, Y, time_between_lines_ticks){
+        if(this.liner == null){
+            this.liner = this.drawLineFactory();
+        }
+
+        return this.liner(itemId, X, Y, time_between_lines_ticks);
+    },
+    /* 
+    This method is used in drawSVG.drawLine().
+    You can read more about closures on https://www.w3schools.com/js/js_function_closures.asp
+    */
+    drawLineFactory: function() {
+        var counter = 0;
+
+        //Decrease to draw lines more often; increase to draw lines less often.
+        //Greater numbers will produce 'low poly' line effect.
+        var TIME_BETWEEN_LINES_TICKS = 10;
+        function drawLineH(itemId, X, Y, time_between_lines_ticks = TIME_BETWEEN_LINES_TICKS) {
+            counter++;
+            //If a line was recently ended, we won't do anything for 10 ticks
+            if (counter>=time_between_lines_ticks) {
+                counter = 0;
+                var path = document.getElementById(itemId);
+                if (path.getAttribute('d')) {
+                    PathHelper.lineTo(X, Y, itemId); //if path for
+                } else {
+                    PathHelper.moveTo(X, Y, itemId);
+                }
+            }
+        }
+        return drawLineH;
+    },
 
     /*
         HTMLhelper is used to provide easy html implementation of base objects.
@@ -210,31 +241,3 @@ var PathHelper = {
     },
 
 };
-
-/* 
-    This method is used in drawSVG.drawLine().
-    You can read more about closures on https://www.w3schools.com/js/js_function_closures.asp
-*/
-function drawLineFactory() {
-    var counter = 0;
-
-    //Decrease to draw lines more often; increase to draw lines less often.
-    //Greater numbers will produce 'low poly' line effect.
-    var TIME_BETWEEN_LINES_TICKS = 10;
-
-    function drawLine(itemId, X, Y, time_between_lines_ticks = TIME_BETWEEN_LINES_TICKS) {
-        counter++;
-
-        //If a line was recently ended, we won't do anything for 10 ticks
-        if (counter>=time_between_lines_ticks) {
-            counter = 0;
-            var path = document.getElementById(itemId);
-            if (path.getAttribute('d')) {
-                PathHelper.lineTo(X, Y, itemId); //if path for
-            } else {
-                PathHelper.moveTo(X, Y, itemId);
-            }
-        }
-    }
-    return drawLine;
-}
