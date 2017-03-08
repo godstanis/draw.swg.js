@@ -25,28 +25,21 @@ drawSVG.init('svg-id');
 ##### That's it! Now you are ready to use all *draw.swg.js* features.
 
 ### Docs
-
 > All code is commented and easy to understand.
 
-To create a `<path>` element use:
+##### Low Level methods
+Before you start, you need to create an empty `<path>` element by:
 ```js
 drawSVG.createElement('element-id').path();
 ```
->Every 'create' method  resets `PathHelper.itemId` property, you can change it if you want to manipulate another object.
-
-After execution of this command your `<svg>` element will get the new empty `<path>` element in it:
-```html
-<path class="svg-element" id="element-id" style="stroke-width: 4px;" fill="none" stroke="green"></path>
-```
-Now you have object that can be manipulated by JS.
-
-##### Low Level methods
-You can now use simple pre-made method to draw lines using `PathHelper`:
+Now you can use simple pre-made methods to draw lines using `PathHelper`:
 ```js
 PathHelper.moveTo(10,10);
 PathHelper.lineTo(20,10);
 ```
-You can also use cunstructions like this one:
+> createElement() defines PathHelper itemId, so you dont need to set it by yourself, you can change it using `PathHelper.setItemId('id')`
+
+You can also use cunstructions like this:
 ```js
 PathHelper.moveTo(10,10).lineTo(20,10);
 ```
@@ -63,14 +56,19 @@ You can also use pre-made logic for:
 <li>Ellipse</li>
 <li>Generatable line (used to generate long paths)</li>
 </ul>
-Example for Arrow:
+Example:
 ```js
-drawSVG.createElement('arrow-id').path();
-drawSVG.drawObject('arrow-id').arrow(10,10,50,50); 
-/* 
- You could use 'drawSVG.drawObject().arrow(10,10,50,50)'
- because create method has assigned 'PathHelper.itemId'
-*/
+//Draw an arrow from (20;110) to (60;160) with id 'arrow'
+drawSVG.drawObject('arrow').arrow(20, 110, 60, 160);
 ```
+If you want to initialize an object and edit it after:
+('false' wil not allow drowObject() create an element automaticly.)
+```js
+drawSVG.createElement('handled-ellipse').ellipse(); // or .path()
+//do some important stuff
+drawSVG.drawObject('handled-ellipse', false).ellipse(400, 110, 300, 200);
+```
+
 <img src="http://i.imgur.com/3Zuyp5K.png">
+<br>
 The code above will create arrow, pointing from (10;10) to (50;50).
