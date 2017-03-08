@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>draw.svg.js demo</title>
     <script src="../src/draw.svg.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
@@ -17,9 +17,11 @@
 <script>
 drawSVG.init('svg-area');
 
+//Chain calls example
 drawSVG.createElement('line_1').path();
 PathHelper.moveTo(10,10).lineTo(50,50).lineTo(10,100);
 
+//New line calls example
 drawSVG.createElement('line_2').path();
 PathHelper.moveTo(100,10);
 PathHelper.lineTo(150,10);
@@ -28,13 +30,48 @@ PathHelper.lineTo(100, 50);
 PathHelper.lineTo(100, 100);
 PathHelper.lineTo(150, 100);
 
-drawSVG.createElement('ellipse').ellipse();
-drawSVG.drawObject().ellipse(300, 10, 200, 100);
+//Draw an ellipse using 2 coordinates (300:10) and (200:100)
+drawSVG.drawObject('ellipse').ellipse(300, 10, 200, 100);
 
-drawSVG.createElement('arrow_1').path();
-drawSVG.drawObject().arrow(20, 110, 60, 160);
+/*
+    If you want to initialize an object and edit it after
+    (For example for dynamic object properties changing)
+    Use this ('false' wil not allow drowObject() create an element automaticly.) :
+*/    
+drawSVG.createElement('handled-ellipse').ellipse(); // or .path()
+drawSVG.drawObject('handled-ellipse', false).ellipse(400, 110, 300, 200);
 
-drawSVG.createElement('rectangle_1').path();
-drawSVG.drawObject().rectangle(120, 110, 260, 210);
+//Draw an arrow from (20;110) to (60;160)
+drawSVG.drawObject('arrow').arrow(20, 110, 60, 160);
+
+//Draw a rectangle using 2 coordinates (120;110) and (260;210)
+drawSVG.drawObject('rec').rectangle(120, 110, 260, 210);
+
+/*
+    drawLine() is used to draw a polygon line every several ticks
+    Last drawLine() property sets the number of ticks between lineTo() actions,
+    you can ignore it (default value is 10). Lower the number - more detailed the output line.
+    The example below shows how to draw a parabola, using drawLine():
+*/
+
+drawSVG.createElement('polygonal-line').path();
+
+for(var i=-100; i<=100;i++)
+{
+    var x_scale = 5, 
+        y_scale=100, 
+        x_offset = 200, 
+        y_offset = 350;
+
+    var x = i;
+    var y = -1*x*x; //simplified parabola function
+
+    x = x/x_scale + x_offset;
+    y = y/y_scale + y_offset;
+
+    console.log ('x='+x+' y='+y);
+    drawSVG.drawLine('polygonal-line', x, y, 1);
+}
+
 </script>
 </html>

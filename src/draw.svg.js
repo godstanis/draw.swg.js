@@ -51,16 +51,44 @@ var drawSVG = {
         }
     },
 
+    createObj: function (itemId, type){
+        switch(type)
+        {
+            case 'ellipse':
+                this.createElement(itemId).ellipse();
+            break;
+            case 'path':
+                this.createElement(itemId).path();
+            break;
+        }
+    },
+
     /*
         Next 'draw' methods use existing element, created by 'create' method and change it properties.
         id - id of existing element, that is going to be changed
         fX, fY - first (X;Y) coordinates to start from
         lX, lY - last (X;Y) coordinates to end the figure
     */
-    drawObject: function(itemId = PathHelper.itemId){
+    drawObject: function(itemId = PathHelper.itemId, do_create = true){
+        var current = this;
+        console.log ('itemid='+itemId+' do_create= '+do_create);
+        function createManage(id, type)
+        {
+            if(do_create)
+            {
+                current.createObj(id, type);
+            }
+            else
+            {
+                itemId = PathHelper.itemId;
+                console.log (itemId);
+            }
+        }
 
         return {
             rectangle: function(fX, fY, lX, lY){
+                //current.createObj(itemId, 'path');
+                createManage(itemId, 'path');
                 PathHelper.moveTo(fX, fY);
                 PathHelper.lineTo(fX, lY);
                 PathHelper.lineTo(lX, lY);
@@ -69,6 +97,8 @@ var drawSVG = {
                 PathHelper.closePath();
             },
             ellipse: function (fX, fY, lX, lY){
+                //current.createObj(itemId, 'ellipse');
+                createManage(itemId, 'ellipse');
                 var ellipse = document.getElementById(itemId);
                 ellipse.setAttribute('cx', fX - (fX-lX)/2);
                 ellipse.setAttribute('cy', fY - (fY-lY)/2);
@@ -76,6 +106,8 @@ var drawSVG = {
                 ellipse.setAttribute('ry', Math.abs(fY-lY)/2);
             },
             arrow: function(fX, fY, lX, lY){
+                //current.createObj(itemId, 'path');
+                createManage(itemId, 'path');
                 // Draws the line
                 PathHelper.moveTo(fX, fY);
                 PathHelper.lineTo(lX, lY);
@@ -129,39 +161,6 @@ var drawSVG = {
 
     drawLine: drawLineFactory(), //Closure. Read more about this mehod below
 
-    /*
-        Next xxxByString methods provide simple interface for 
-        string based switching (for example Radio buttons input)
-    */
-    drawByString(string, itemId, fX, fY, lX, lY){ 
-        console.log(itemId);
-        switch(string)
-            {
-                case "rectangle": this.drawObject(itemId).rectangle(fX, fY, lX, lY)
-                    break;
-                case "arrow": this.drawObject(itemId).arrow(fX, fY, lX, lY)
-                    break;
-                case "line": this.drawLine(itemId, lX, lY)
-                    break;
-                case "ellipse": this.drawObject(itemId).ellipse(fX, fY, lX, lY)
-            }
-    },
-
-    createByString(string, itemId){
-
-        switch(string)
-            {
-                case "rectangle": this.createElement(itemId).path();
-                    break;
-                case "arrow": this.createElement(itemId).path();
-                    break;
-                case "line": this.createElement(itemId).path();
-                    break;
-                case "ellipse": this.createElement(itemId).ellipse();
-                    break;
-                case "eraser": this.deleteObject(element.target.id);
-            }
-    }
 };
 
 /*
@@ -216,11 +215,11 @@ function drawLineFactory() {
     //Greater numbers will produce 'low poly' line effect.
     var TIME_BETWEEN_LINES_TICKS = 10;
 
-    function drawLine(itemId, X, Y) {
+    function drawLine(itemId, X, Y, time_between_lines_ticks = TIME_BETWEEN_LINES_TICKS) {
         counter++;
 
         //If a line was recently ended, we won't do anything for 10 ticks
-        if (counter>=TIME_BETWEEN_LINES_TICKS) {
+        if (counter>=time_between_lines_ticks) {
             counter = 0;
             var path = document.getElementById(itemId);
             if (path.getAttribute('d')) {
