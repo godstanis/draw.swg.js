@@ -21,6 +21,8 @@ drawSVG.init('svg-area');
 drawSVG.createElement('line_1').path();
 PathHelper.moveTo(10,10).lineTo(50,50).lineTo(10,100);
 
+drawSVG.setColor('red');
+
 //New line calls example
 drawSVG.createElement('line_2').path();
 PathHelper.moveTo(100,10);
@@ -29,6 +31,8 @@ PathHelper.lineTo(150, 50);
 PathHelper.lineTo(100, 50);
 PathHelper.lineTo(100, 100);
 PathHelper.lineTo(150, 100);
+
+drawSVG.setColor('pink');
 
 //Draw an ellipse using 2 coordinates (300:10) and (200:100)
 drawSVG.drawObject('ellipse').ellipse(300, 10, 200, 100);
@@ -41,8 +45,13 @@ drawSVG.drawObject('ellipse').ellipse(300, 10, 200, 100);
 drawSVG.createElement('handled-ellipse').ellipse(); // or .path()
 drawSVG.drawObject('handled-ellipse', false).ellipse(400, 110, 300, 200);
 
+drawSVG.setColor('purple');
+
 //Draw an arrow from (20;110) to (60;160)
 drawSVG.drawObject('arrow').arrow(20, 110, 60, 160);
+
+drawSVG.setColor('grey');
+drawSVG.setWidth('1px');
 
 //Draw a rectangle using 2 coordinates (120;110) and (260;210)
 drawSVG.drawObject('rec').rectangle(120, 110, 260, 210);
@@ -53,6 +62,8 @@ drawSVG.drawObject('rec').rectangle(120, 110, 260, 210);
     you can ignore it (default value is 10). Lower the number - more detailed the output line.
     The example below shows how to draw a parabola, using drawLine():
 */
+
+drawSVG.setWidth('2px');
 
 drawSVG.createElement('polygonal-line').path();
 

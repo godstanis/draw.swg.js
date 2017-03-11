@@ -15,6 +15,14 @@ var drawSVG = {
     init: function(element){ //This method will render marker for arrow tip inside <svg>
         this.element = element;
     },
+    setColor(color)
+    {
+        this.strokeColor = color;
+    },
+    setWidth(width)
+    {
+        this.strokeWidth = width;
+    },
     clear: function(){
         this.returnElement().innerHTML = '';
     },
