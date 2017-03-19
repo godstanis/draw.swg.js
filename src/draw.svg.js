@@ -34,7 +34,7 @@ var drawSVG = {
         var deletable = ['path', 'ellipse'];//deletable object tags
         var element = document.getElementById(id);
 
-        if(deletable.indexOf(element.tagName) != -1 && confirm('Are you sure?'))
+        if(deletable.indexOf(element.tagName) != -1)
         {
             element.parentNode.removeChild(element);
         }
@@ -247,5 +247,4 @@ var PathHelper = {
     {
         this.itemId = itemId;
     },
-
 };
