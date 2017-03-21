@@ -52,7 +52,7 @@ The code above will create horizontal line (10px in length).(<img width=40px src
 You can also use pre-made logic for:
 <ul>
 <li>Arrow</li>
-<li>Rectangle(path)</li>
+<li>Rectangle</li>
 <li>Ellipse</li>
 <li>Generatable line (used to generate long paths)</li>
 </ul>
