@@ -30,7 +30,7 @@ drawSVG.init('svg-id');
 ##### Low Level methods
 Before you start, you need to create an empty `<path>` element by:
 ```js
-drawSVG.createElement('element-id').path();
+drawSVG.createElement('element-id');
 ```
 Now you can use simple pre-made methods to draw lines using `PathHelper`:
 ```js
@@ -56,19 +56,28 @@ You can also use pre-made logic for:
 <li>Ellipse</li>
 <li>Generatable line (used to generate long paths)</li>
 </ul>
-Example:
+
+Example(arrow):
 ```js
 //Draw an arrow from (20;110) to (60;160) with id 'arrow'
 drawSVG.drawObject('arrow').arrow(20, 110, 60, 160);
 ```
+
+
+arrow:<img src="http://i.imgur.com/3Zuyp5K.png">
+
+
+The code above will create arrow, pointing from (10;10) to (50;50).
+
 If you want to initialize an object and edit it after:
 ('false' wil not allow drowObject() create an element automaticly.)
 ```js
-drawSVG.createElement('handled-ellipse').ellipse(); // or .path()
+drawSVG.createElement('handled-ellipse');
 //do some important stuff
 drawSVG.drawObject('handled-ellipse', false).ellipse(400, 110, 300, 200);
 ```
 
-<img src="http://i.imgur.com/3Zuyp5K.png">
+circle:<img src="http://i.imgur.com/SPDIyxV.png">
 <br>
-The code above will create arrow, pointing from (10;10) to (50;50).
+
+The code above will create ellipse.
