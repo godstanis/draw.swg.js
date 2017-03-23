@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>draw.svg.js demo</title>
-    <script src="../src/draw.svg.js"></script>
+    <script src="../src/draw.svg.BETA.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
@@ -18,13 +18,13 @@
 drawSVG.init('svg-area');
 
 //Chain calls example
-drawSVG.createElement('line_1').path();
+drawSVG.createElement('line_1');
 PathHelper.moveTo(10,10).lineTo(50,50).lineTo(10,100);
 
 drawSVG.setColor('red');
 
 //New line calls example
-drawSVG.createElement('line_2').path();
+drawSVG.createElement('line_2');
 PathHelper.moveTo(100,10);
 PathHelper.lineTo(150,10);
 PathHelper.lineTo(150, 50);
@@ -42,7 +42,7 @@ drawSVG.drawObject('ellipse').ellipse(300, 10, 200, 100);
     (For example for dynamic object properties changing)
     Use this ('false' wil not allow drowObject() create an element automaticly.) :
 */    
-drawSVG.createElement('handled-ellipse').ellipse(); // or .path()
+drawSVG.createElement('handled-ellipse'); // or .path()
 drawSVG.drawObject('handled-ellipse', false).ellipse(400, 110, 300, 200);
 
 drawSVG.setColor('purple');
@@ -65,7 +65,7 @@ drawSVG.drawObject('rec').rectangle(120, 110, 260, 210);
 
 drawSVG.setWidth('2px');
 
-drawSVG.createElement('polygonal-line').path();
+drawSVG.createElement('polygonal-line');
 
 for(var i=-100; i<=100;i++)
 {
@@ -80,7 +80,6 @@ for(var i=-100; i<=100;i++)
     x = x/x_scale + x_offset;
     y = y/y_scale + y_offset;
 
-    //console.log ('x='+x+' y='+y);
     drawSVG.drawLine('polygonal-line', x, y, 1);
 }
 
