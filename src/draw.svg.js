@@ -15,11 +15,11 @@ var drawSVG = {
     init: function(element){ //This method will render marker for arrow tip inside <svg>
         this.element = element;
     },
-    setColor(color)
+    setColor: function(color)
     {
         this.strokeColor = color;
     },
-    setWidth(width)
+    setWidth: function(width)
     {
         this.strokeWidth = width;
     },
@@ -65,7 +65,7 @@ var drawSVG = {
         {
             if(do_create)
             {
-                current.createElement(itemId);
+                this.createElement(itemId);
             }
             else
             {
@@ -88,7 +88,7 @@ var drawSVG = {
 
                 createManage(itemId);
 
-                var step = 2*Math.PI/40;  // see note 1
+                var step = 2*Math.PI/40;  // drawing frequency
                 var cx = fX; 
                 var cy = fY;
                 var rx = Math.abs(fX-lX)/2;
@@ -191,9 +191,9 @@ var drawSVG = {
                 counter = 0;
                 var path = document.getElementById(itemId);
                 if (path.getAttribute('d')) {
-                    PathHelper.lineTo(X, Y, itemId); //if path for
+                    PathHelper.lineTo(X, Y, itemId);
                 } else {
-                    PathHelper.moveTo(X, Y, itemId);
+                    PathHelper.moveTo(X, Y, itemId); // if path has not been started yet
                 }
             }
         }
@@ -214,7 +214,7 @@ var drawSVG = {
         Next xxxByString methods provide simple interface for 
         string based switching (for example Radio buttons input)
     */
-    drawByString(string, itemId, fX, fY, lX, lY){ 
+    drawByString: function(string, itemId, fX, fY, lX, lY){ 
         switch(string)
             {
                 case "rectangle": this.drawObject(itemId, false).rectangle(fX, fY, lX, lY)
