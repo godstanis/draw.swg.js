@@ -222,13 +222,13 @@ var drawSVG = (function(){
     function drawByString(string, itemId, fX, fY, lX, lY){ 
         switch(string)
             {
-                case "rectangle": this.drawObject(itemId, false).rectangle(fX, fY, lX, lY)
+                case "rectangle": drawObject(itemId, false).rectangle(fX, fY, lX, lY)
                     break;
-                case "arrow": this.drawObject(itemId, false).arrow(fX, fY, lX, lY)
+                case "arrow": drawObject(itemId, false).arrow(fX, fY, lX, lY)
                     break;
-                case "line": this.drawLineH(itemId, lX, lY, 6)
+                case "line": drawLineH(itemId, lX, lY, 6)
                     break;
-                case "ellipse": this.drawObject(itemId, false).ellipse(fX, fY, lX, lY)
+                case "ellipse": drawObject(itemId, false).ellipse(fX, fY, lX, lY)
             }
     };
 
