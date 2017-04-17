@@ -15,22 +15,22 @@
 </body>
 
 <script>
-drawSVG.initElementById('svg-area');
+drawSVG.init('svg-area');
 
 //Chain calls example
 drawSVG.createElement('line_1');
-drawSVG.PathHelper.moveTo(10,10).lineTo(50,50).lineTo(10,100);
+PathHelper.moveTo(10,10).lineTo(50,50).lineTo(10,100);
 
 drawSVG.setColor('red');
 
 //New line calls example
 drawSVG.createElement('line_2');
-drawSVG.PathHelper.moveTo(100,10);
-drawSVG.PathHelper.lineTo(150,10);
-drawSVG.PathHelper.lineTo(150, 50);
-drawSVG.PathHelper.lineTo(100, 50);
-drawSVG.PathHelper.lineTo(100, 100);
-drawSVG.PathHelper.lineTo(150, 100);
+PathHelper.moveTo(100,10);
+PathHelper.lineTo(150,10);
+PathHelper.lineTo(150, 50);
+PathHelper.lineTo(100, 50);
+PathHelper.lineTo(100, 100);
+PathHelper.lineTo(150, 100);
 
 drawSVG.setColor('pink');
 
