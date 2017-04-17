@@ -34,18 +34,18 @@ drawSVG.createElement('element-id');
 ```
 Now you can use simple pre-made methods to draw lines using `PathHelper`:
 ```js
-PathHelper.moveTo(10,10);
-PathHelper.lineTo(20,10);
+drawSVG.PathHelper.moveTo(10,10);
+drawSVG.PathHelper.lineTo(20,10);
 ```
-> createElement() defines PathHelper itemId, so you dont need to set it by yourself, you can change it using `PathHelper.setItemId('id')`
+> createElement() defines drawSVG.PathHelper itemId, so you dont need to set it by yourself, you can change it using `drawSVG.PathHelper.setItemId('id')`
 
 You can also use cunstructions like this:
 ```js
-PathHelper.moveTo(10,10).lineTo(20,10);
+drawSVG.PathHelper.moveTo(10,10).lineTo(20,10);
 ```
 There is also a method to close your path:
 ```js
-PathHelper.closePath();
+drawSVG.PathHelper.closePath();
 ```
 The code above will create horizontal line (10px in length).(<img width=40px src="http://i.imgur.com/fQUxYFA.jpg">)
 ##### Pre-sets of basic figures
